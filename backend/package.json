@@ -1,0 +1,13 @@
+{
+  "name": "novel-reader-backend",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.0",
+    "axios": "^1.6.0",
+    "iconv-lite": "^0.6.3"
+  }
+}
