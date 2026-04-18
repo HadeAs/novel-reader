@@ -18,8 +18,21 @@
     document.documentElement.style.setProperty('--font-size', size + 'px');
   }
 
+  const FONTS = [
+    { key: 'serif',    label: '宋体',  css: "Georgia, 'Songti SC', '宋体', serif" },
+    { key: 'sans',     label: '黑体',  css: "'PingFang SC', 'Hiragino Sans GB', '微软雅黑', sans-serif" },
+    { key: 'kaiti',    label: '楷体',  css: "'KaiTi', 'STKaiti', '楷体', serif" },
+    { key: 'fangsong', label: '仿宋',  css: "'FangSong', 'STFangsong', '仿宋', serif" },
+  ];
+
+  function applyFontFamily(key) {
+    const font = FONTS.find(f => f.key === key) || FONTS[0];
+    document.documentElement.style.setProperty('--font-family', font.css);
+  }
+
   applyTheme(storage.getTheme());
   applyFontSize(storage.getFontSize());
+  applyFontFamily(storage.getFontFamily());
 
   function updateNavButtons() {
     const prevBtn = document.getElementById('prevBtn');
@@ -121,6 +134,29 @@
     const next = storage.getTheme() === 'dark' ? 'light' : 'dark';
     storage.setTheme(next);
     applyTheme(next);
+  });
+
+  // Font family picker
+  document.getElementById('fontFamilyBtn').addEventListener('click', () => {
+    const list = document.getElementById('fontFamilyList');
+    const current = storage.getFontFamily();
+    list.innerHTML = '';
+    FONTS.forEach(f => {
+      const item = document.createElement('div');
+      item.className = 'font-item' + (f.key === current ? ' current' : '');
+      item.style.fontFamily = f.css;
+      item.textContent = f.label + ' — 春风又绿江南岸';
+      item.addEventListener('click', () => {
+        storage.setFontFamily(f.key);
+        applyFontFamily(f.key);
+        document.getElementById('fontFamilyModal').classList.remove('open');
+      });
+      list.appendChild(item);
+    });
+    document.getElementById('fontFamilyModal').classList.add('open');
+  });
+  document.getElementById('fontFamilyModal').addEventListener('click', e => {
+    if (e.target === e.currentTarget) e.currentTarget.classList.remove('open');
   });
 
   // Selector modal

@@ -9,6 +9,7 @@
   --border: #e0d5c0;
   --shadow: rgba(0,0,0,0.08);
   --font-size: 17px;
+  --font-family: Georgia, 'Songti SC', '宋体', serif;
 }
 
 [data-theme="dark"] {
@@ -27,7 +28,7 @@
 
 html, body {
   height: 100%;
-  font-family: Georgia, 'Noto Serif SC', '宋体', serif;
+  font-family: var(--font-family);
   background: var(--bg);
   color: var(--text);
   -webkit-text-size-adjust: 100%;
@@ -388,3 +389,15 @@ a { color: var(--accent); text-decoration: none; }
   color: var(--text-muted);
 }
 .state-msg .emoji { font-size: 40px; margin-bottom: 12px; display: block; }
+
+/* ── Font picker ── */
+.font-item {
+  padding: 14px 4px;
+  border-bottom: 1px solid var(--border);
+  font-size: 16px;
+  color: var(--text);
+  cursor: pointer;
+}
+.font-item:last-child { border-bottom: none; }
+.font-item:active { color: var(--accent); }
+.font-item.current { color: var(--accent); font-weight: 600; }

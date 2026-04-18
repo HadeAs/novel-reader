@@ -43,6 +43,14 @@ const storage = {
     localStorage.setItem('font_size', String(size));
   },
 
+  getFontFamily() {
+    return localStorage.getItem('font_family') || 'serif';
+  },
+
+  setFontFamily(key) {
+    localStorage.setItem('font_family', key);
+  },
+
   getTheme() {
     return localStorage.getItem('theme') || 'light';
   },
