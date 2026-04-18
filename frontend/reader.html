@@ -59,6 +59,8 @@
       <input class="form-input" id="contentSelector" placeholder=".content, #chapter-content">
       <div class="modal-hint">章节列表选择器（留空用自动识别）</div>
       <input class="form-input" id="chapterListSelector" placeholder="#list, .chapter-list">
+      <div class="modal-hint">站点 Cookie（遇到 403 时从浏览器 DevTools → Network → 复制请求头里的 Cookie 值粘贴此处）</div>
+      <input class="form-input" id="siteCookie" placeholder="session=xxx; _gid=xxx; ...">
       <div class="form-row">
         <button class="btn-primary" id="selectorSave">保存并重新加载</button>
         <button class="btn-secondary" id="selectorCancel">取消</button>
@@ -67,6 +69,7 @@
   </div>
 
   <script src="js/storage.js"></script>
+  <script src="js/proxy.js"></script>
   <script src="js/parser.js"></script>
   <script src="js/vendor/Readability.js"></script>
   <script src="js/reader.js"></script>

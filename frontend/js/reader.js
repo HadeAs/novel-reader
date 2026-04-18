@@ -122,6 +122,10 @@
     if (book) {
       document.getElementById('contentSelector').value = book.selectors.content || '';
       document.getElementById('chapterListSelector').value = book.selectors.chapterList || '';
+      try {
+        const hostname = new URL(book.indexUrl).hostname;
+        document.getElementById('siteCookie').value = storage.getCookie(hostname);
+      } catch (_) {}
     }
     document.getElementById('selectorModal').classList.add('open');
   });
@@ -131,7 +135,14 @@
   document.getElementById('selectorSave').addEventListener('click', () => {
     const content = document.getElementById('contentSelector').value.trim();
     const chapterList = document.getElementById('chapterListSelector').value.trim();
-    if (book) storage.updateBook(bookId, { selectors: { content, chapterList } });
+    const cookie = document.getElementById('siteCookie').value.trim();
+    if (book) {
+      storage.updateBook(bookId, { selectors: { content, chapterList } });
+      try {
+        const hostname = new URL(book.indexUrl).hostname;
+        storage.setCookie(hostname, cookie);
+      } catch (_) {}
+    }
     document.getElementById('selectorModal').classList.remove('open');
     loadChapter(chapterUrl);
   });
@@ -142,9 +153,7 @@
     contentEl.innerHTML = '<div class="state-msg"><span class="emoji">⏳</span>加载中…</div>';
 
     try {
-      const res = await fetch(`/proxy?url=${encodeURIComponent(url)}`);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const html = await res.text();
+      const html = await proxyFetch(url);
       const doc = new DOMParser().parseFromString(html, 'text/html');
 
       const selectors = book ? book.selectors : { content: '', chapterList: '' };

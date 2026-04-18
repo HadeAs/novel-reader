@@ -50,6 +50,18 @@ const storage = {
   setTheme(theme) {
     localStorage.setItem('theme', theme);
   },
+
+  getCookie(hostname) {
+    return localStorage.getItem(`cookie_${hostname}`) || '';
+  },
+
+  setCookie(hostname, cookie) {
+    if (cookie) {
+      localStorage.setItem(`cookie_${hostname}`, cookie);
+    } else {
+      localStorage.removeItem(`cookie_${hostname}`);
+    }
+  },
 };
 
 if (typeof window !== 'undefined') window.storage = storage;

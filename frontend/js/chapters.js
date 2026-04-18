@@ -22,9 +22,7 @@
 
   async function loadChapters() {
     try {
-      const res = await fetch(`/proxy?url=${encodeURIComponent(indexUrl)}`);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const html = await res.text();
+      const html = await proxyFetch(indexUrl);
       const doc = new DOMParser().parseFromString(html, 'text/html');
 
       let chapters;

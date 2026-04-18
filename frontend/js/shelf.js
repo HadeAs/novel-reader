@@ -67,9 +67,7 @@
     confirmBtn.disabled = true;
 
     try {
-      const res = await fetch(`/proxy?url=${encodeURIComponent(url)}`);
-      if (!res.ok) throw new Error(`代理请求失败: ${res.status}`);
-      const html = await res.text();
+      const html = await proxyFetch(url);
       const doc = new DOMParser().parseFromString(html, 'text/html');
 
       const title = titleHint
