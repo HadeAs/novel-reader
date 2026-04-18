@@ -108,25 +108,29 @@ a { color: var(--accent); text-decoration: none; }
   display: none;
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.45);
+  background: rgba(0,0,0,0.5);
   border-radius: 10px;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 10px;
+  gap: 6px;
 }
 .manage-mode .card-actions { display: flex; }
 .card-action-btn {
-  width: 80%;
-  padding: 6px 0;
-  border-radius: 6px;
+  flex: 1;
+  padding: 8px 0;
+  border-radius: 8px;
   border: none;
-  font-size: 13px;
-  font-family: -apple-system, sans-serif;
+  font-size: 18px;
+  line-height: 1;
   cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: opacity 0.15s;
 }
-.card-action-btn.delete { background: #e94560; color: #fff; }
-.card-action-btn.edit   { background: #fff;    color: #333; }
+.card-action-btn:active { opacity: 0.7; }
+.card-action-btn.delete { background: rgba(233,69,96,0.85); color: #fff; }
+.card-action-btn.edit   { background: rgba(255,255,255,0.85); color: #333; }
 .book-cover {
   background: var(--accent-light);
   height: 70px;

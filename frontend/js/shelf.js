@@ -38,8 +38,8 @@
         <div class="book-chapter">${book.currentChapterTitle || '未开始'}</div>
         <div class="book-date">${relativeTime(book.lastRead)}</div>
         <div class="card-actions">
-          <button class="card-action-btn edit">✏ 编辑</button>
-          <button class="card-action-btn delete">✕ 删除</button>
+          <button class="card-action-btn edit">✏</button>
+          <button class="card-action-btn delete">✕</button>
         </div>
       `;
 
