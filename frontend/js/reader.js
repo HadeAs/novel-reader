@@ -47,6 +47,7 @@
       });
     }
     sessionStorage.setItem('chapterIdx', String(idx));
+    if (bookId) storage.setScrollPos(bookId, 0);
     location.href = `reader.html?id=${bookId}&url=${encodeURIComponent(ch.url)}`;
   }
 
@@ -54,11 +55,16 @@
   document.getElementById('nextBtn').addEventListener('click', () => navigateChapter(chapterIdx + 1));
   document.getElementById('backBtn').addEventListener('click', () => { location.href = 'index.html'; });
 
-  // Scroll progress bar
+  // Scroll progress bar + save position (debounced)
+  let scrollTimer = null;
   window.addEventListener('scroll', () => {
     const total = document.documentElement.scrollHeight - window.innerHeight;
     const pct = total > 0 ? Math.round((window.scrollY / total) * 100) : 0;
     document.getElementById('progressFill').style.width = pct + '%';
+    if (bookId) {
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => storage.setScrollPos(bookId, pct), 400);
+    }
   });
 
   // TOC panel
@@ -178,7 +184,16 @@
       document.getElementById('navTitle').textContent = title;
       document.title = title;
       contentEl.innerHTML = `<h1>${title}</h1>${body}`;
-      window.scrollTo(0, 0);
+      // Restore saved scroll position
+      const savedPct = bookId ? storage.getScrollPos(bookId) : 0;
+      if (savedPct > 0) {
+        requestAnimationFrame(() => {
+          const total = document.documentElement.scrollHeight - window.innerHeight;
+          window.scrollTo(0, Math.round(total * savedPct / 100));
+        });
+      } else {
+        window.scrollTo(0, 0);
+      }
 
       if (book) {
         storage.updateBook(bookId, {

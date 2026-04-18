@@ -51,6 +51,14 @@ const storage = {
     localStorage.setItem('theme', theme);
   },
 
+  getScrollPos(bookId) {
+    return parseFloat(localStorage.getItem(`scroll_${bookId}`) || '0');
+  },
+
+  setScrollPos(bookId, pct) {
+    localStorage.setItem(`scroll_${bookId}`, String(pct));
+  },
+
   getCookie(hostname) {
     return localStorage.getItem(`cookie_${hostname}`) || '';
   },
