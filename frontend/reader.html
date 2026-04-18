@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>阅读</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <div class="nav-bar">
+    <button class="nav-btn" id="backBtn">← 书架</button>
+    <span class="nav-title" id="navTitle">加载中…</span>
+    <button class="nav-btn" id="tocBtn">目录 ☰</button>
+  </div>
+
+  <div class="page">
+    <div class="reader-content" id="readerContent">
+      <div class="state-msg">
+        <span class="emoji">⏳</span>加载中…
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <div class="nav-row">
+      <button class="nav-chapter-btn" id="prevBtn">◀ 上一章</button>
+      <span class="chapter-counter" id="chapterCounter">—</span>
+      <button class="nav-chapter-btn" id="nextBtn">下一章 ▶</button>
+    </div>
+    <div class="control-row">
+      <button class="ctrl-btn" id="fontDecBtn">A−</button>
+      <button class="ctrl-btn" id="fontIncBtn">A+</button>
+      <button class="ctrl-btn" id="themeBtn">☾ 夜间</button>
+      <button class="ctrl-btn" id="selectorBtn">⚙ 选择器</button>
+    </div>
+  </div>
+
+  <!-- TOC overlay -->
+  <div class="toc-overlay" id="tocOverlay">
+    <div class="toc-panel">
+      <div class="toc-header">
+        目录
+        <button class="toc-close" id="tocClose">✕</button>
+      </div>
+      <div id="tocList"></div>
+    </div>
+    <div style="flex:1" id="tocBackdrop"></div>
+  </div>
+
+  <!-- Selector modal -->
+  <div class="modal-overlay" id="selectorModal">
+    <div class="modal-sheet">
+      <div class="modal-title">CSS 选择器配置</div>
+      <div class="modal-hint">正文内容选择器（留空用 Readability 自动识别）</div>
+      <input class="form-input" id="contentSelector" placeholder=".content, #chapter-content">
+      <div class="modal-hint">章节列表选择器（留空用自动识别）</div>
+      <input class="form-input" id="chapterListSelector" placeholder="#list, .chapter-list">
+      <div class="form-row">
+        <button class="btn-primary" id="selectorSave">保存并重新加载</button>
+        <button class="btn-secondary" id="selectorCancel">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/parser.js"></script>
+  <script src="js/vendor/Readability.js"></script>
+  <script src="js/reader.js"></script>
+</body>
+</html>
