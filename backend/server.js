@@ -2,6 +2,34 @@ const express = require('express');
 const axios = require('axios');
 const iconv = require('iconv-lite');
 const path = require('path');
+const puppeteerExtra = require('puppeteer-extra');
+const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+
+puppeteerExtra.use(StealthPlugin());
+
+let browser = null;
+
+async function getBrowser() {
+  if (!browser) {
+    browser = await puppeteerExtra.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+    browser.on('disconnected', () => { browser = null; });
+  }
+  return browser;
+}
+
+async function fetchWithPuppeteer(url) {
+  const b = await getBrowser();
+  const page = await b.newPage();
+  try {
+    await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
+    return await page.content();
+  } finally {
+    await page.close();
+  }
+}
 
 const app = express();
 
@@ -57,6 +85,19 @@ app.get('/proxy', async (req, res) => {
     res.set('Content-Type', 'text/html; charset=utf-8');
     res.send(html);
   } catch (err) {
+    // Cloudflare or bot-protection detected — fall back to headless browser
+    if (err.response && err.response.status === 403) {
+      console.log(`[proxy] 403 on ${url}, retrying with puppeteer stealth...`);
+      try {
+        const html = await fetchWithPuppeteer(url);
+        res.set('Content-Type', 'text/html; charset=utf-8');
+        return res.send(html);
+      } catch (ppErr) {
+        console.error(`[proxy] puppeteer fallback failed: ${ppErr.message}`);
+        return res.status(502).json({ error: `Puppeteer fallback failed: ${ppErr.message}` });
+      }
+    }
+    console.error(`[proxy] ${err.response ? err.response.status : 'ERR'} ${url} — ${err.message}`);
     res.status(502).json({ error: err.message || String(err) || 'Proxy request failed' });
   }
 });
