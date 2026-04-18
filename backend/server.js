@@ -7,6 +7,9 @@ const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 
 puppeteerExtra.use(StealthPlugin());
 
+// Per-domain cookie cache (survives for the lifetime of the process)
+const cookieCache = new Map();
+
 let browser = null;
 
 async function getBrowser() {
@@ -25,7 +28,16 @@ async function fetchWithPuppeteer(url) {
   const page = await b.newPage();
   try {
     await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
-    return await page.content();
+    const html = await page.content();
+    // Extract and cache cookies for this domain
+    const cookies = await page.cookies();
+    if (cookies.length > 0) {
+      const hostname = new URL(url).hostname;
+      const cookieStr = cookies.map(c => `${c.name}=${c.value}`).join('; ');
+      cookieCache.set(hostname, cookieStr);
+      console.log(`[proxy] cached ${cookies.length} cookies for ${hostname}`);
+    }
+    return html;
   } finally {
     await page.close();
   }
@@ -41,8 +53,16 @@ app.get('/proxy', async (req, res) => {
     return res.status(400).json({ error: 'url parameter required' });
   }
 
+  let parsedUrl;
+  try { parsedUrl = new URL(url); } catch (_) {
+    return res.status(400).json({ error: 'invalid url' });
+  }
+
+  // Use cached domain cookie if available, fallback to client-provided cookie
+  const cachedCookie = cookieCache.get(parsedUrl.hostname) || '';
+  const cookie = req.query.cookie || cachedCookie;
+
   try {
-    const parsedUrl = new URL(url);
     const response = await axios.get(url, {
       responseType: 'arraybuffer',
       timeout: 15000,
@@ -59,7 +79,7 @@ app.get('/proxy', async (req, res) => {
         'Sec-Fetch-Site': 'same-origin',
         'Sec-Fetch-User': '?1',
         'Cache-Control': 'max-age=0',
-        ...(req.query.cookie ? { 'Cookie': req.query.cookie } : {}),
+        ...(cookie ? { 'Cookie': cookie } : {}),
       },
       maxRedirects: 10,
     });
@@ -85,9 +105,9 @@ app.get('/proxy', async (req, res) => {
     res.set('Content-Type', 'text/html; charset=utf-8');
     res.send(html);
   } catch (err) {
-    // Cloudflare or bot-protection detected — fall back to headless browser
+    // 403: Cloudflare or bot-protection — fall back to puppeteer, which auto-solves challenges
     if (err.response && err.response.status === 403) {
-      console.log(`[proxy] 403 on ${url}, retrying with puppeteer stealth...`);
+      console.log(`[proxy] 403 on ${parsedUrl.hostname}, retrying with puppeteer stealth...`);
       try {
         const html = await fetchWithPuppeteer(url);
         res.set('Content-Type', 'text/html; charset=utf-8');
