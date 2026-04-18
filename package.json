@@ -2,8 +2,16 @@
   "name": "novel-reader",
   "private": true,
   "scripts": {
+    "start": "node backend/server.js",
     "test": "jest",
     "test:watch": "jest --watch"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "express": "^4.18.0",
+    "iconv-lite": "^0.6.3",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
   },
   "devDependencies": {
     "jest": "^29.0.0",

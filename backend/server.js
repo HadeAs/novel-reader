@@ -16,7 +16,8 @@ async function getBrowser() {
   if (!browser) {
     browser = await puppeteerExtra.launch({
       headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
     });
     browser.on('disconnected', () => { browser = null; });
   }
@@ -124,8 +125,8 @@ app.get('/proxy', async (req, res) => {
 
 if (require.main === module) {
   const PORT = process.env.PORT || 3000;
-  app.listen(PORT, '127.0.0.1', () => {
-    console.log(`Novel Reader running at http://127.0.0.1:${PORT}`);
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Novel Reader running at http://0.0.0.0:${PORT}`);
   });
 }
 
