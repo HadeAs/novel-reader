@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>目录</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="nav-bar">
+    <button class="nav-btn" id="backBtn">← 书架</button>
+    <span class="nav-title" id="navTitle">目录</span>
+    <span style="width:60px"></span>
+  </div>
+
+  <div class="page">
+    <div id="chaptersList" class="chapters-list">
+      <div class="state-msg">
+        <span class="emoji">⏳</span>
+        加载中…
+      </div>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/parser.js"></script>
+  <script src="js/vendor/Readability.js"></script>
+  <script src="js/chapters.js"></script>
+</body>
+</html>
