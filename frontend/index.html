@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>我的书架</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="nav-bar">
+    <span style="width:60px"></span>
+    <span class="nav-title">我的书架</span>
+    <span style="width:60px"></span>
+  </div>
+
+  <div class="page">
+    <div class="shelf-container">
+      <div class="shelf-grid" id="shelfGrid"></div>
+
+      <button class="add-btn" id="toggleAddBtn">＋ 添加新书</button>
+
+      <div class="add-form" id="addForm">
+        <label class="form-label">粘贴小说目录页网址</label>
+        <input class="form-input" id="urlInput" type="url"
+               placeholder="https://www.example.com/novel/xxx">
+        <label class="form-label">书名（可选，留空自动识别）</label>
+        <input class="form-input" id="titleInput" type="text" placeholder="例：斗破苍穹">
+        <div class="form-row">
+          <button class="btn-primary" id="addConfirmBtn">解析并添加</button>
+          <button class="btn-secondary" id="addCancelBtn">取消</button>
+        </div>
+        <div class="loading-text" id="loadingText">正在解析，请稍候…</div>
+      </div>
+
+      <div id="emptyState" class="state-msg" style="display:none">
+        <span class="emoji">📚</span>
+        还没有书，添加一本吧
+      </div>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/parser.js"></script>
+  <script src="js/vendor/Readability.js"></script>
+  <script src="js/shelf.js"></script>
+</body>
+</html>
