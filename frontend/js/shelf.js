@@ -1,4 +1,7 @@
 (function () {
+  let managing = false;
+  let editingId = null;
+
   function generateId() {
     return Math.random().toString(36).slice(2) + Date.now().toString(36);
   }
@@ -34,18 +37,69 @@
         <div class="book-name">${book.title}</div>
         <div class="book-chapter">${book.currentChapterTitle || '未开始'}</div>
         <div class="book-date">${relativeTime(book.lastRead)}</div>
+        <div class="card-actions">
+          <button class="card-action-btn edit">✏ 编辑</button>
+          <button class="card-action-btn delete">✕ 删除</button>
+        </div>
       `;
+
+      card.querySelector('.card-action-btn.edit').addEventListener('click', e => {
+        e.stopPropagation();
+        openEdit(book);
+      });
+
+      card.querySelector('.card-action-btn.delete').addEventListener('click', e => {
+        e.stopPropagation();
+        if (confirm(`删除《${book.title}》？`)) {
+          storage.removeBook(book.id);
+          renderShelf();
+        }
+      });
+
       card.addEventListener('click', () => {
+        if (managing) return;
         if (book.currentChapterUrl) {
           location.href = `reader.html?id=${book.id}&url=${encodeURIComponent(book.currentChapterUrl)}`;
         } else {
           location.href = `chapters.html?id=${book.id}&url=${encodeURIComponent(book.indexUrl)}`;
         }
       });
+
       grid.appendChild(card);
     });
+
+    grid.className = managing ? 'shelf-grid manage-mode' : 'shelf-grid';
   }
 
+  // Manage toggle
+  document.getElementById('manageBtn').addEventListener('click', () => {
+    managing = !managing;
+    document.getElementById('manageBtn').textContent = managing ? '完成' : '管理';
+    renderShelf();
+  });
+
+  // Edit modal
+  function openEdit(book) {
+    editingId = book.id;
+    document.getElementById('editTitle').value = book.title;
+    document.getElementById('editUrl').value = book.indexUrl;
+    document.getElementById('editModal').classList.add('open');
+  }
+
+  document.getElementById('editCancel').addEventListener('click', () => {
+    document.getElementById('editModal').classList.remove('open');
+  });
+
+  document.getElementById('editSave').addEventListener('click', () => {
+    const title = document.getElementById('editTitle').value.trim();
+    const indexUrl = document.getElementById('editUrl').value.trim();
+    if (!title || !indexUrl) { alert('书名和网址不能为空'); return; }
+    storage.updateBook(editingId, { title, indexUrl });
+    document.getElementById('editModal').classList.remove('open');
+    renderShelf();
+  });
+
+  // Add book form
   document.getElementById('toggleAddBtn').addEventListener('click', () => {
     document.getElementById('addForm').classList.toggle('open');
   });
@@ -69,7 +123,6 @@
     confirmBtn.disabled = true;
 
     try {
-      // Save cookie before fetching so proxyFetch picks it up
       if (cookie) {
         try { storage.setCookie(new URL(url).hostname, cookie); } catch (_) {}
       }

@@ -10,7 +10,7 @@
   <div class="nav-bar">
     <span style="width:60px"></span>
     <span class="nav-title">我的书架</span>
-    <span style="width:60px"></span>
+    <button class="nav-btn" id="manageBtn">管理</button>
   </div>
 
   <div class="page">
@@ -37,6 +37,21 @@
       <div id="emptyState" class="state-msg" style="display:none">
         <span class="emoji">📚</span>
         还没有书，添加一本吧
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit book modal -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal-sheet">
+      <div class="modal-title">编辑书籍</div>
+      <label class="form-label">书名</label>
+      <input class="form-input" id="editTitle" type="text">
+      <label class="form-label">目录页网址</label>
+      <input class="form-input" id="editUrl" type="url">
+      <div class="form-row">
+        <button class="btn-primary" id="editSave">保存</button>
+        <button class="btn-secondary" id="editCancel">取消</button>
       </div>
     </div>
   </div>
