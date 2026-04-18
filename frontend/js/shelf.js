@@ -54,6 +54,7 @@
     document.getElementById('addForm').classList.remove('open');
     document.getElementById('urlInput').value = '';
     document.getElementById('titleInput').value = '';
+    document.getElementById('cookieInput').value = '';
   });
 
   document.getElementById('addConfirmBtn').addEventListener('click', async () => {
@@ -61,12 +62,17 @@
     if (!url) { alert('请输入网址'); return; }
 
     const titleHint = document.getElementById('titleInput').value.trim();
+    const cookie = document.getElementById('cookieInput').value.trim();
     const loading = document.getElementById('loadingText');
     const confirmBtn = document.getElementById('addConfirmBtn');
     loading.style.display = 'block';
     confirmBtn.disabled = true;
 
     try {
+      // Save cookie before fetching so proxyFetch picks it up
+      if (cookie) {
+        try { storage.setCookie(new URL(url).hostname, cookie); } catch (_) {}
+      }
       const html = await proxyFetch(url);
       const doc = new DOMParser().parseFromString(html, 'text/html');
 
@@ -88,6 +94,7 @@
       document.getElementById('addForm').classList.remove('open');
       document.getElementById('urlInput').value = '';
       document.getElementById('titleInput').value = '';
+      document.getElementById('cookieInput').value = '';
       location.href = `chapters.html?id=${book.id}&url=${encodeURIComponent(url)}`;
     } catch (err) {
       alert(`添加失败: ${err.message}`);

@@ -25,6 +25,8 @@
                placeholder="https://www.example.com/novel/xxx">
         <label class="form-label">书名（可选，留空自动识别）</label>
         <input class="form-input" id="titleInput" type="text" placeholder="例：斗破苍穹">
+        <label class="form-label">站点 Cookie（遇到 403 时填写，可选）</label>
+        <input class="form-input" id="cookieInput" type="text" placeholder="从浏览器 DevTools → Network → 请求头 Cookie 复制">
         <div class="form-row">
           <button class="btn-primary" id="addConfirmBtn">解析并添加</button>
           <button class="btn-secondary" id="addCancelBtn">取消</button>
