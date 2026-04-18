@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(/Users/huangzhicheng/.claude/skills/brainstorming/scripts/start-server.sh *)",
+      "Bash(npm install *)",
+      "Bash(npm test *)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
+    ]
+  }
+}
