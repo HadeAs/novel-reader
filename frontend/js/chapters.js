@@ -3,7 +3,7 @@
   const bookId = params.get('id');
   const indexUrl = params.get('url');
 
-  const book = storage.getBook(bookId);
+  let book = storage.getBook(bookId);
   document.documentElement.dataset.theme = storage.getTheme();
 
   document.getElementById('backBtn').addEventListener('click', () => {
@@ -99,6 +99,7 @@
       storage.updateBook(bookId, {
         selectors: { ...book.selectors, chapterList: sel },
       });
+      book = storage.getBook(bookId); // refresh local ref
       try {
         storage.setCookie(new URL(book.indexUrl).hostname, cookie);
       } catch (_) {}
