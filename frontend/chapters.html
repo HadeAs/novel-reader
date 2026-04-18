@@ -10,7 +10,22 @@
   <div class="nav-bar">
     <button class="nav-btn" id="backBtn">← 书架</button>
     <span class="nav-title" id="navTitle">目录</span>
-    <span style="width:60px"></span>
+    <button class="nav-btn" id="settingsBtn">⚙</button>
+  </div>
+
+  <!-- Selector modal -->
+  <div class="modal-overlay" id="selectorModal">
+    <div class="modal-sheet">
+      <div class="modal-title">章节列表配置</div>
+      <div class="modal-hint">章节列表选择器（包含所有章节链接的容器）</div>
+      <input class="form-input" id="chapterListSelector" placeholder="#list, .chapter-list, .book-catalog">
+      <div class="modal-hint">站点 Cookie（遇到 403 时填写）</div>
+      <input class="form-input" id="siteCookie" placeholder="session=xxx; cf_clearance=xxx; ...">
+      <div class="form-row">
+        <button class="btn-primary" id="selectorSave">保存并重新解析</button>
+        <button class="btn-secondary" id="selectorCancel">取消</button>
+      </div>
+    </div>
   </div>
 
   <div class="page">

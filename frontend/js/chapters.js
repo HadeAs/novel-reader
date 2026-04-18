@@ -76,5 +76,36 @@
       `<div class="state-msg"><span class="emoji">⚠️</span>${msg}</div>`;
   }
 
+  // Selector modal
+  document.getElementById('settingsBtn').addEventListener('click', () => {
+    if (book) {
+      document.getElementById('chapterListSelector').value = book.selectors.chapterList || '';
+      try {
+        document.getElementById('siteCookie').value =
+          storage.getCookie(new URL(book.indexUrl).hostname);
+      } catch (_) {}
+    }
+    document.getElementById('selectorModal').classList.add('open');
+  });
+
+  document.getElementById('selectorCancel').addEventListener('click', () => {
+    document.getElementById('selectorModal').classList.remove('open');
+  });
+
+  document.getElementById('selectorSave').addEventListener('click', () => {
+    const sel = document.getElementById('chapterListSelector').value.trim();
+    const cookie = document.getElementById('siteCookie').value.trim();
+    if (book) {
+      storage.updateBook(bookId, {
+        selectors: { ...book.selectors, chapterList: sel },
+      });
+      try {
+        storage.setCookie(new URL(book.indexUrl).hostname, cookie);
+      } catch (_) {}
+    }
+    document.getElementById('selectorModal').classList.remove('open');
+    loadChapters();
+  });
+
   loadChapters();
 })();
